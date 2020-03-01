@@ -15,6 +15,7 @@
     "@react-navigation/native": "^5.0.7",
     "antd": "^3.26.11",
     "antd-mobile": "^2.3.1",
+    "popup-ui": "^1.0.10",
     "react": "16.9.0",
     "react-native": "0.61.5",
     "react-native-elements": "^1.2.7",

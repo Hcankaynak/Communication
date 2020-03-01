@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {
   Text,
   View,
-  Button,
   StyleSheet,
   TouchableOpacity,
   TextInput,
@@ -30,7 +29,7 @@ function Header({navigation}) {
           </TouchableOpacity>
         </View>
         <View style={styles.viewHeader}>
-          <Text style={styles.textHeader}> Bildirim </Text>
+          <Text style={styles.textHeader}>Geri Bildirim </Text>
           <Text style={styles.textHeaderSub}>Havva Bayır</Text>
         </View>
       </View>
