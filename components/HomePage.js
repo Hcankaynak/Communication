@@ -9,6 +9,8 @@ import {
   ActivityIndicator,
   Image,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
+import Tts from 'react-native-tts';
 
 function Header({navigation}) {
   return (
@@ -83,6 +85,7 @@ export default class HomePage extends Component {
     this.state = {
       dataSource: {},
     };
+    Tts.setDefaultLanguage('tr-TR');
   }
   componentDidMount() {
     var that = this;
@@ -93,6 +96,20 @@ export default class HomePage extends Component {
       dataSource: items,
     });
   }
+  consoleLogtest(itemId) {
+    console.log('button' + itemId);
+  }
+  speak = async itemId => {
+    try {
+      const value = await AsyncStorage.getItem(itemId.toString());
+      if (value !== null) {
+        Tts.speak(value);
+        // value previously stored
+      }
+    } catch (e) {
+      // error reading value
+    }
+  };
   render() {
     return (
       <>
@@ -108,9 +125,14 @@ export default class HomePage extends Component {
                   margin: 1,
                   padding: 20,
                 }}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.speak(item.id);
+                  }}>
                   <View style={styles.imageThumbnail}>
-                    <Text>{item.id}</Text>
+                    <Text style={{fontSize: 30, fontWeight: 'bold'}}>
+                      {item.id}
+                    </Text>
                   </View>
                 </TouchableOpacity>
               </View>

@@ -10,7 +10,7 @@ import {
   AsyncStorage,
 } from 'react-native';
 import Tts from 'react-native-tts';
-Tts.speak('Hello, world!');
+
 function Header({navigation}) {
   return (
     <View style={{flex: 1}}>
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   viewHeader: {
     justifyContent: 'center',
     alignItems: 'center',
-    flex: 5,
+    flex: 6,
   },
   button: {
     width: 64,
@@ -75,29 +75,18 @@ export default class Settings extends Component {
       text: '',
     };
   }
-  myFunction = () => {
+  myFunction = async () => {
+    try {
+      await AsyncStorage.setItem('1', 'buralarda mısın');
+    } catch (e) {
+      // saving error
+    }
+
     var test = this.state.text;
     Tts.speak(test);
     this.setState({text: ''});
   };
-  _storeData = async () => {
-    try {
-      await AsyncStorage.setItem('TASKS', 'I like to save it.');
-    } catch (error) {
-      // Error saving data
-    }
-  };
-  _retrieveData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('TASKS');
-      if (value !== null) {
-        // We have data!!
-        console.log(value);
-      }
-    } catch (error) {
-      // Error retrieving data
-    }
-  };
+
   render() {
     return (
       <>
@@ -105,7 +94,7 @@ export default class Settings extends Component {
         <View style={{alignItems: 'center', justifyContent: 'center', flex: 6}}>
           <TouchableOpacity
             myText={this.state.text}
-            onPress={() => this._retrieveData()}>
+            onPress={() => this.myFunction()}>
             <View style={styles.button}>
               <Image
                 source={require('../assets/blabla.jpg')}

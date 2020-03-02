@@ -12,8 +12,9 @@ import {
   TouchableHighlight,
   Alert,
   Picker,
-  AsyncStorage,
+  TextInput,
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 
 function Header({navigation}) {
   return (
@@ -88,84 +89,64 @@ export default class HomePage extends Component {
     this.state = {
       dataSource: {},
       modalVisible: false,
+      button: '',
+      text: '',
+      color: {
+        a1: 'aqua',
+        one: 'aqua',
+        two: 'aqua',
+        three: 'aqua',
+        four: 'aqua',
+        five: 'aqua',
+        six: 'aqua',
+        seven: 'aqua',
+        eight: 'aqua',
+      },
+      0: '',
     };
   }
+
   componentDidMount() {
     var that = this;
     let items = Array.apply(null, Array(9)).map((v, i) => {
-      return {id: i, src: 'http://placehold.it/200x200?text=' + (i + 1)};
+      return {
+        id: i,
+        src: 'http://placehold.it/200x200?text=' + (i + 1),
+      };
     });
     that.setState({
       dataSource: items,
     });
   }
-  setModalVisible(visible) {
-    this.setState({modalVisible: visible});
+  setModalVisible(itemId, visible) {
+    this.setState({modalVisible: visible, button: itemId});
   }
-  _storeData = async () => {
+  storeData = async (itemId, text) => {
     try {
-      await AsyncStorage.setItem('@MySuperStore:key', 'I like to save it.');
-    } catch (error) {
-      // Error saving data
+      await AsyncStorage.setItem(itemId.toString(), text);
+      this.setState({button: '', text: ''});
+    } catch (e) {
+      // saving error
     }
   };
-  _retrieveData = async () => {
+  getData = async (itemId, visible) => {
     try {
-      const value = await AsyncStorage.getItem('TASKS');
+      this.setState({modalVisible: visible, button: itemId});
+
+      const value = await AsyncStorage.getItem(itemId.toString());
       if (value !== null) {
-        // We have data!!
-        return value;
+        this.setState({text: value});
+        // value previously stored
       }
-    } catch (error) {
-      // Error retrieving data
+    } catch (e) {
+      // error reading value
     }
   };
+
   render() {
     return (
       <>
         <Header navigation={this.props.navigation} />
-        <Modal
-          animationType="slide"
-          transparent={false}
-          visible={this.state.modalVisible}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-          }}>
-          <View
-            style={{
-              marginTop: 22,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <View>
-              <View
-                style={{
-                  alignContent: 'stretch',
-                  flex: 0.3,
-                  borderRadius: 10,
-                  borderWidth: 0.5,
-                }}>
-                <Text> {this._retrieveData()} </Text>
-                <Picker
-                  selectedValue={this.state.language}
-                  style={{width: 150, height: 50}}
-                  onValueChange={(itemValue, itemIndex) =>
-                    this.setState({language: itemValue})
-                  }>
-                  <Picker.Item label="Java" value="java" />
-                  <Picker.Item label="JavaScript" value="js" />
-                </Picker>
-              </View>
-              <TouchableHighlight
-                style={{flex: 0.3}}
-                onPress={() => {
-                  this.setModalVisible(!this.state.modalVisible);
-                }}>
-                <Text>Hide Modal</Text>
-              </TouchableHighlight>
-            </View>
-          </View>
-        </Modal>
         <View style={styles.MainContainer}>
           <FlatList
             data={this.state.dataSource}
@@ -179,10 +160,12 @@ export default class HomePage extends Component {
                 }}>
                 <TouchableOpacity
                   onPress={() => {
-                    this.setState({modalVisible: true});
+                    this.getData(item.id, true);
                   }}>
                   <View style={styles.imageThumbnail}>
-                    <Text>{item.id}</Text>
+                    <Text style={{fontSize: 30, fontWeight: 'bold'}}>
+                      {item.id}
+                    </Text>
                   </View>
                 </TouchableOpacity>
               </View>
@@ -191,6 +174,86 @@ export default class HomePage extends Component {
             numColumns={3}
             keyExtractor={(item, index) => index.toString()}
           />
+          <Modal
+            animationType="slide"
+            transparent={false}
+            visible={this.state.modalVisible}
+            onRequestClose={() => {
+              Alert.alert('Modal has been closed.');
+            }}>
+            <View
+              style={{
+                margin: 30,
+                flex: 1,
+                flexDirection: 'column',
+                backgroundColor: 'skyblue',
+                padding: 20,
+              }}>
+              <Text style={{textAlign: 'center', fontSize: 32}}>
+                Buton {this.state.button}
+              </Text>
+              <View style={{padding: 20}}>
+                <View>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      fontSize: 24,
+                      margin: 10,
+                    }}>
+                    Renk Seçimi
+                  </Text>
+                  <Picker
+                    mode="dropdown"
+                    style={{alignItems: 'center'}}
+                    selectedValue={this.state.language}
+                    onValueChange={(itemValue, itemIndex) =>
+                      this.setState({language: itemValue})
+                    }>
+                    <Picker.Item label="Mavi" value="mavi" />
+                    <Picker.Item label="Sarı" value="sari" />
+                    <Picker.Item label="Yeşil" value="yesil" />
+                    <Picker.Item label="Pembe" value="pembe" />
+                    <Picker.Item label="Kırmızı" value="kirmizi" />
+                    <Picker.Item label="Mor" value="mor" />
+                  </Picker>
+                </View>
+                <View>
+                  <Text
+                    style={{
+                      fontSize: 24,
+                      textAlign: 'center',
+                    }}>
+                    Metin
+                  </Text>
+                  <TextInput
+                    placeholder="This is previous message."
+                    onChangeText={text => this.setState({text})}
+                    value={this.state.text}
+                    style={{
+                      textAlignVertical: 'top',
+                      height: 150,
+                      borderRadius: 10,
+                      borderWidth: 0.5,
+                      marginTop: 20,
+                    }}
+                    multiline={true}
+                  />
+                </View>
+                <TouchableHighlight
+                  onPress={() => {
+                    this.storeData(this.state.button, this.state.text);
+                    this.setModalVisible('', !this.state.modalVisible);
+                  }}
+                  style={{alignItems: 'center', marginTop: 20}}>
+                  <View style={{backgroundColor: 'blue', width: 100}}>
+                    <Text style={{fontSize: 14, textAlign: 'center'}}>
+                      Kaydet
+                    </Text>
+                  </View>
+                </TouchableHighlight>
+              </View>
+            </View>
+          </Modal>
         </View>
       </>
     );
