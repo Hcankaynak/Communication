@@ -1,12 +1,6 @@
 import React, {Component} from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  Image,
-} from 'react-native';
+import {Text, View, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {Button, TextInput} from 'react-native-paper';
 
 function Header({navigation}) {
   return (
@@ -61,6 +55,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  textInput: {
+    margin: 10,
+  },
 });
 
 export default class FeedBack extends Component {
@@ -77,19 +74,19 @@ export default class FeedBack extends Component {
           style={{
             flex: 6,
           }}>
-          <View style={{alignItems: 'center'}}>
-            <Text style={{fontSize: 30, fontWeight: 'bold', marginTop: 50}}>
+          <View>
+            <Text
+              style={{
+                fontSize: 30,
+                fontWeight: 'bold',
+                marginTop: 50,
+                textAlign: 'center',
+              }}>
               Konu
             </Text>
             <TextInput
-              style={{
-                height: 40,
-                alignSelf: 'stretch',
-                borderRadius: 10,
-                borderWidth: 0.5,
-                marginLeft: 10,
-                marginRight: 10,
-              }}
+              style={styles.textInput}
+              type="outlined"
               placeholder="Konu yazmak için tıklayınız."
               onChangeText={topic => this.setState({topic})}
               value={this.state.topic}
@@ -100,39 +97,30 @@ export default class FeedBack extends Component {
               style={{fontSize: 30, fontWeight: 'bold', alignSelf: 'center'}}>
               Mesaj
             </Text>
-            <TextInput
-              style={{
-                height: 200,
-                borderRadius: 10,
-                borderWidth: 0.5,
-                textAlignVertical: 'top',
-                marginLeft: 10,
-                marginRight: 10,
-              }}
-              placeholder="Konu yazmak için tıklayınız."
-              onChangeText={text => this.setState({text})}
-              value={this.state.text}
-              multiline={true}
-            />
           </View>
+          <TextInput
+            style={{margin: 20, height: 150, textAlignVertical: 'top'}}
+            placeholder="mesaj yazmak için tıklayınız."
+            value={this.state.text}
+            mode="outlined"
+            label="Mesaj"
+            onChangeText={text => this.setState({text})}
+            dense={true}
+            multiline={true}
+            textAlignVertical="top"
+          />
           <View
             style={{
               marginTop: 100,
               alignItems: 'center',
             }}>
-            <TouchableOpacity>
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  height: 50,
-                  width: 200,
-                  backgroundColor: 'skyblue',
-                  borderWidth: 0.5,
-                }}>
-                <Text>Gönder</Text>
-              </View>
-            </TouchableOpacity>
+            <Button
+              icon="send"
+              color="blue"
+              mode="contained"
+              onPress={() => console.log('Pressed')}>
+              Gönder
+            </Button>
           </View>
         </View>
       </>

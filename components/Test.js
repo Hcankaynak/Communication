@@ -11,6 +11,7 @@ import {
   Picker,
   TextInput,
 } from 'react-native';
+import {Button} from 'react-native-paper';
 
 function Header({navigation}) {
   return (
@@ -151,12 +152,15 @@ export default class Test extends Component {
             </View>
           </Modal>
 
-          <TouchableHighlight
+          <Button
+            style={{width: '75%', alignSelf: 'center'}}
+            icon="camera"
+            mode="contained"
             onPress={() => {
               this.setModalVisible(true);
             }}>
-            <Text>Show Modal</Text>
-          </TouchableHighlight>
+            Press me
+          </Button>
         </View>
       </View>
     );
