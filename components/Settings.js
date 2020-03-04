@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {
   Text,
   View,
-  Button,
   StyleSheet,
   TouchableOpacity,
   FlatList,
@@ -15,7 +14,7 @@ import {
   TextInput,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import {Button} from 'react-native-paper';
 function Header({navigation}) {
   return (
     <View style={{flex: 1}}>
@@ -183,7 +182,7 @@ export default class HomePage extends Component {
             }}>
             <View
               style={{
-                margin: 30,
+                justifyContent: 'center',
                 flex: 1,
                 flexDirection: 'column',
                 backgroundColor: 'skyblue',
@@ -204,7 +203,7 @@ export default class HomePage extends Component {
                   </Text>
                   <Picker
                     mode="dropdown"
-                    style={{alignItems: 'center'}}
+                    style={{alignItems: 'center', borderWidth: 0.5}}
                     selectedValue={this.state.language}
                     onValueChange={(itemValue, itemIndex) =>
                       this.setState({language: itemValue})
@@ -239,18 +238,18 @@ export default class HomePage extends Component {
                     multiline={true}
                   />
                 </View>
-                <TouchableHighlight
+
+                <Button
+                  style={{width: '25%', alignSelf: 'center', marginTop: 20}}
+                  icon="content-save"
+                  color="blue"
+                  mode="contained"
                   onPress={() => {
                     this.storeData(this.state.button, this.state.text);
                     this.setModalVisible('', !this.state.modalVisible);
-                  }}
-                  style={{alignItems: 'center', marginTop: 20}}>
-                  <View style={{backgroundColor: 'blue', width: 100}}>
-                    <Text style={{fontSize: 14, textAlign: 'center'}}>
-                      Kaydet
-                    </Text>
-                  </View>
-                </TouchableHighlight>
+                  }}>
+                  Kaydet
+                </Button>
               </View>
             </View>
           </Modal>
