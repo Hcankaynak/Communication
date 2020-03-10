@@ -86,7 +86,7 @@ export default class FeedBack extends Component {
             </Text>
             <TextInput
               style={styles.textInput}
-              type="outlined"
+              mode="outlined"
               placeholder="Konu yazmak için tıklayınız."
               onChangeText={topic => this.setState({topic})}
               value={this.state.topic}
@@ -100,14 +100,11 @@ export default class FeedBack extends Component {
           </View>
           <TextInput
             style={{margin: 20, height: 150, textAlignVertical: 'top'}}
-            placeholder="mesaj yazmak için tıklayınız."
+            placeholder="Mesaj yazmak için tıklayınız."
             value={this.state.text}
             mode="outlined"
-            label="Mesaj"
             onChangeText={text => this.setState({text})}
-            dense={true}
             multiline={true}
-            textAlignVertical="top"
           />
           <View
             style={{
