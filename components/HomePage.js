@@ -60,12 +60,13 @@ export default class HomePage extends Component {
     this.state = {
       counter: 0,
       dataSource: {},
-      isLoading: 'false',
+      isLoading: true,
       refreshing: false,
     };
     Tts.setDefaultLanguage('tr-TR');
     console.log('constructor');
   }
+
   _onRefresh() {
     this.setState({refreshing: true});
     this.componentDidMount().then(() => {
@@ -73,6 +74,9 @@ export default class HomePage extends Component {
     });
   }
   componentDidMount() {
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.componentDidMount();
+    });
     var that = this;
     let items = Array.apply(null, Array(9)).map((v, i) => {
       return {
@@ -93,6 +97,9 @@ export default class HomePage extends Component {
         }
       });
     }
+  }
+  componentWillUnmount() {
+    this._unsubscribe();
   }
 
   async getBackgroundColor(itemId) {
@@ -139,6 +146,7 @@ export default class HomePage extends Component {
       // saving error
     }
   };
+
   render() {
     return (
       <>
