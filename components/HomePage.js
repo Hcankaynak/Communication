@@ -7,39 +7,14 @@ import {
   TouchableOpacity,
   FlatList,
   ActivityIndicator,
+  ScrollView,
+  RefreshControl,
   Image,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Tts from 'react-native-tts';
-
-function Header({navigation}) {
-  return (
-    <View style={{flex: 1}}>
-      <View style={styles.header}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: 20,
-          }}>
-          <TouchableOpacity onPress={() => navigation.openDrawer()}>
-            <View style={styles.button}>
-              <Image
-                source={require('../assets/blabla.jpg')}
-                style={{width: 64, height: 64}}
-              />
-            </View>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.viewHeader}>
-          <Text style={styles.textHeader}> İletişim Uygulaması </Text>
-          <Text style={styles.textHeaderSub}>Havva Bayır</Text>
-        </View>
-      </View>
-    </View>
-  );
-}
+import {NavigationEvents} from 'react-navigation';
+import Header from './Header';
 
 const styles = StyleSheet.create({
   header: {
@@ -83,23 +58,64 @@ export default class HomePage extends Component {
   constructor() {
     super();
     this.state = {
+      counter: 0,
       dataSource: {},
+      isLoading: 'false',
+      refreshing: false,
     };
     Tts.setDefaultLanguage('tr-TR');
+    console.log('constructor');
+  }
+  _onRefresh() {
+    this.setState({refreshing: true});
+    this.componentDidMount().then(() => {
+      this.setState({refreshing: false});
+    });
   }
   componentDidMount() {
     var that = this;
     let items = Array.apply(null, Array(9)).map((v, i) => {
-      return {id: i, src: 'http://placehold.it/200x200?text=' + (i + 1)};
+      return {
+        id: i,
+        src: 'http://placehold.it/200x200?text=' + (i + 1),
+        color: 'aqua',
+      };
     });
-    that.setState({
-      dataSource: items,
-    });
+    var i = 0;
+    for (const prop in items) {
+      AsyncStorage.getItem('color' + prop.toString()).then((item) => {
+        if (item) {
+          items[prop].color = item;
+          console.log(prop + 'if(item): ' + item);
+          that.setState({
+            dataSource: items,
+          });
+        }
+      });
+    }
+  }
+
+  async getBackgroundColor(itemId) {
+    try {
+      const color = await AsyncStorage.getItem('color' + itemId.toString());
+
+      if (color != null) {
+        //onsole.log(color);
+        return color;
+        // value previously stored
+      } else {
+        //console.log(color);
+        return 'aqua';
+      }
+    } catch (e) {
+      return 'aqua';
+      // error reading value
+    }
   }
   consoleLogtest(itemId) {
     console.log('button' + itemId);
   }
-  speak = async itemId => {
+  speak = async (itemId) => {
     try {
       const value = await AsyncStorage.getItem(itemId.toString());
       if (value !== null) {
@@ -110,10 +126,23 @@ export default class HomePage extends Component {
       // error reading value
     }
   };
+  checkLoading = async () => {
+    try {
+      console.log('hey');
+      const value = await AsyncStorage.getItem('isLoading');
+      if (value !== null) {
+        this.setState({isLoading: value});
+        await AsyncStorage.setItem('isLoading', 'false');
+        // value previously stored
+      }
+    } catch (e) {
+      // saving error
+    }
+  };
   render() {
     return (
       <>
-        <Header navigation={this.props.navigation} />
+        <Header navigation={this.props.navigation} name="İletişim Uygulaması" />
         <View style={styles.MainContainer}>
           <FlatList
             data={this.state.dataSource}
@@ -128,8 +157,16 @@ export default class HomePage extends Component {
                 <TouchableOpacity
                   onPress={() => {
                     this.speak(item.id);
+                    this.setState({counter: this.state.counter + 1});
+                    console.log(this.state.counter);
                   }}>
-                  <View style={styles.imageThumbnail}>
+                  <View
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      height: 100,
+                      backgroundColor: item.color,
+                    }}>
                     <Text style={{fontSize: 30, fontWeight: 'bold'}}>
                       {item.id}
                     </Text>

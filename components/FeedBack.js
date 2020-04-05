@@ -1,35 +1,7 @@
 import React, {Component} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import {Button, TextInput} from 'react-native-paper';
-
-function Header({navigation}) {
-  return (
-    <View style={{flex: 1}}>
-      <View style={styles.header}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: 20,
-          }}>
-          <TouchableOpacity onPress={() => navigation.openDrawer()}>
-            <View style={styles.button}>
-              <Image
-                source={require('../assets/blabla.jpg')}
-                style={{width: 64, height: 64}}
-              />
-            </View>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.viewHeader}>
-          <Text style={styles.textHeader}>Geri Bildirim </Text>
-          <Text style={styles.textHeaderSub}>Havva Bayır</Text>
-        </View>
-      </View>
-    </View>
-  );
-}
+import Header from './Header';
 
 const styles = StyleSheet.create({
   header: {
@@ -69,7 +41,7 @@ export default class FeedBack extends Component {
   render() {
     return (
       <>
-        <Header navigation={this.props.navigation} />
+        <Header navigation={this.props.navigation} name="Geri Bildirim" />
         <View
           style={{
             flex: 6,
@@ -88,7 +60,7 @@ export default class FeedBack extends Component {
               style={styles.textInput}
               mode="outlined"
               placeholder="Konu yazmak için tıklayınız."
-              onChangeText={topic => this.setState({topic})}
+              onChangeText={(topic) => this.setState({topic})}
               value={this.state.topic}
             />
           </View>
@@ -103,7 +75,7 @@ export default class FeedBack extends Component {
             placeholder="Mesaj yazmak için tıklayınız."
             value={this.state.text}
             mode="outlined"
-            onChangeText={text => this.setState({text})}
+            onChangeText={(text) => this.setState({text})}
             multiline={true}
           />
           <View

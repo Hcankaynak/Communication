@@ -11,35 +11,6 @@ import {
 } from 'react-native';
 import Tts from 'react-native-tts';
 
-function Header({navigation}) {
-  return (
-    <View style={{flex: 1}}>
-      <View style={styles.header}>
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            flex: 1,
-            padding: 20,
-          }}>
-          <TouchableOpacity onPress={() => navigation.openDrawer()}>
-            <View style={styles.button}>
-              <Image
-                source={require('../assets/blabla.jpg')}
-                style={{width: 64, height: 64}}
-              />
-            </View>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.viewHeader}>
-          <Text style={styles.textHeader}> Ayarlar </Text>
-          <Text style={styles.textHeaderSub}>Havva Bayır</Text>
-        </View>
-      </View>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   header: {
     flex: 1,
@@ -90,7 +61,6 @@ export default class Settings extends Component {
   render() {
     return (
       <>
-        <Header navigation={this.props.navigation} />
         <View style={{alignItems: 'center', justifyContent: 'center', flex: 6}}>
           <TouchableOpacity
             myText={this.state.text}
@@ -105,7 +75,7 @@ export default class Settings extends Component {
           <TextInput
             style={{height: 40}}
             placeholder="Type here to translate!"
-            onChangeText={text => this.setState({text})}
+            onChangeText={(text) => this.setState({text})}
             value={this.state.text}
           />
         </View>

@@ -13,34 +13,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Button} from 'react-native-paper';
-function Header({navigation}) {
-  return (
-    <View style={{flex: 1}}>
-      <View style={styles.header}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: 20,
-          }}>
-          <TouchableOpacity onPress={() => navigation.openDrawer()}>
-            <View style={styles.button}>
-              <Image
-                source={require('../assets/blabla.jpg')}
-                style={{width: 64, height: 64}}
-              />
-            </View>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.viewHeader}>
-          <Text style={styles.textHeader}> Ayarlar </Text>
-          <Text style={styles.textHeaderSub}>Havva Bayır</Text>
-        </View>
-      </View>
-    </View>
-  );
-}
+import Header from './Header';
 
 const styles = StyleSheet.create({
   header: {
@@ -88,17 +61,7 @@ export default class HomePage extends Component {
       modalVisible: false,
       button: '',
       text: '',
-      color: {
-        zero: 'aqua',
-        one: 'aqua',
-        two: 'aqua',
-        three: 'aqua',
-        four: 'aqua',
-        five: 'aqua',
-        six: 'aqua',
-        seven: 'aqua',
-        eight: 'aqua',
-      },
+      color: '',
       0: '',
     };
   }
@@ -118,10 +81,11 @@ export default class HomePage extends Component {
   setModalVisible(itemId, visible) {
     this.setState({modalVisible: visible, button: itemId});
   }
-  storeData = async (itemId, text) => {
+  storeData = async (itemId, text, color) => {
     try {
       await AsyncStorage.setItem(itemId.toString(), text);
-      this.setState({button: '', text: ''});
+      await AsyncStorage.setItem('color' + itemId.toString(), color);
+      this.setState({button: '', text: '', color: ''});
     } catch (e) {
       // saving error
     }
@@ -131,19 +95,42 @@ export default class HomePage extends Component {
       this.setState({modalVisible: visible, button: itemId});
 
       const value = await AsyncStorage.getItem(itemId.toString());
+      const color = await AsyncStorage.getItem('color' + itemId.toString());
+
       if (value !== null) {
         this.setState({text: value});
+        // value previously stored
+      }
+      if (color !== null) {
+        this.setState({color: color});
+      }
+    } catch (e) {
+      // error reading value
+    }
+  };
+  getSelectedColor = async () => {
+    try {
+      const value = await AsyncStorage.getItem(this.state.color.toString());
+      if (value !== null) {
+        return value;
         // value previously stored
       }
     } catch (e) {
       // error reading value
     }
   };
+  isLoading = async () => {
+    try {
+      await AsyncStorage.setItem('isLoading', 'true');
+    } catch (e) {
+      // saving error
+    }
+  };
 
   render() {
     return (
       <>
-        <Header navigation={this.props.navigation} />
+        <Header navigation={this.props.navigation} name="Ayarlar" />
         <View style={styles.MainContainer}>
           <FlatList
             data={this.state.dataSource}
@@ -202,16 +189,16 @@ export default class HomePage extends Component {
                   <Picker
                     mode="dropdown"
                     style={{alignItems: 'center', borderWidth: 0.5}}
-                    selectedValue={this.state.language}
+                    selectedValue={this.state.color}
                     onValueChange={(itemValue, itemIndex) =>
-                      this.setState({language: itemValue})
+                      this.setState({color: itemValue})
                     }>
-                    <Picker.Item label="Mavi" value="mavi" />
-                    <Picker.Item label="Sarı" value="sari" />
-                    <Picker.Item label="Yeşil" value="yesil" />
-                    <Picker.Item label="Pembe" value="pembe" />
-                    <Picker.Item label="Kırmızı" value="kirmizi" />
-                    <Picker.Item label="Mor" value="mor" />
+                    <Picker.Item label="Mavi" value="blue" />
+                    <Picker.Item label="Sarı" value="yellow" />
+                    <Picker.Item label="Yeşil" value="green" />
+                    <Picker.Item label="Pembe" value="pink" />
+                    <Picker.Item label="Kırmızı" value="red" />
+                    <Picker.Item label="Mor" value="purple" />
                   </Picker>
                 </View>
                 <View>
@@ -224,7 +211,7 @@ export default class HomePage extends Component {
                   </Text>
                   <TextInput
                     placeholder="This is previous message."
-                    onChangeText={text => this.setState({text})}
+                    onChangeText={(text) => this.setState({text})}
                     value={this.state.text}
                     style={{
                       textAlignVertical: 'top',
@@ -243,8 +230,13 @@ export default class HomePage extends Component {
                   color="blue"
                   mode="contained"
                   onPress={() => {
-                    this.storeData(this.state.button, this.state.text);
+                    this.storeData(
+                      this.state.button,
+                      this.state.text,
+                      this.state.color,
+                    );
                     this.setModalVisible('', !this.state.modalVisible);
+                    this.isLoading();
                   }}>
                   Kaydet
                 </Button>
