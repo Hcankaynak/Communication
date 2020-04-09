@@ -67,17 +67,14 @@ export default class HomePage extends Component {
     console.log('constructor');
   }
 
-  _onRefresh() {
-    this.setState({refreshing: true});
-    this.componentDidMount().then(() => {
-      this.setState({refreshing: false});
-    });
-  }
   componentDidMount() {
     this._unsubscribe = this.props.navigation.addListener('focus', () => {
-      this.componentDidMount();
+      console.log('focus');
+      this.setState({isLoading: true});
+      this.myUpdate();
     });
     var that = this;
+    console.log('didmount');
     let items = Array.apply(null, Array(9)).map((v, i) => {
       return {
         id: i,
@@ -87,7 +84,7 @@ export default class HomePage extends Component {
     });
     var i = 0;
     for (const prop in items) {
-      AsyncStorage.getItem('color' + prop.toString()).then((item) => {
+      AsyncStorage.getItem('color' + prop.toString()).then(item => {
         if (item) {
           items[prop].color = item;
           console.log(prop + 'if(item): ' + item);
@@ -97,9 +94,27 @@ export default class HomePage extends Component {
         }
       });
     }
+    this.setState({isLoading: false});
   }
   componentWillUnmount() {
     this._unsubscribe();
+  }
+
+  myUpdate() {
+    let items = this.state.dataSource;
+
+    for (const prop in items) {
+      AsyncStorage.getItem('color' + prop.toString()).then(item => {
+        if (item) {
+          items[prop].color = item;
+          console.log(prop + 'if(item): ' + item);
+          this.setState({
+            dataSource: items,
+          });
+        }
+      });
+    }
+    this.setState({isLoading: false});
   }
 
   async getBackgroundColor(itemId) {
@@ -122,7 +137,7 @@ export default class HomePage extends Component {
   consoleLogtest(itemId) {
     console.log('button' + itemId);
   }
-  speak = async (itemId) => {
+  speak = async itemId => {
     try {
       const value = await AsyncStorage.getItem(itemId.toString());
       if (value !== null) {

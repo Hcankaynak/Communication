@@ -18,10 +18,14 @@ export default function App() {
         <Drawer.Screen name="Ana Sayfa" component={HomePage} />
         <Drawer.Screen name="Ayarlar" component={Settings} />
         <Drawer.Screen name="Geri Bildirim" component={FeedBack} />
-        <Drawer.Screen name="Test" component={Test} />
-        <Drawer.Screen name="TTS" component={TTS} />
-        <Drawer.Screen name="Design" component={Design} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
 }
+/*
+
+<Drawer.Screen name="Test" component={Test} />
+<Drawer.Screen name="TTS" component={TTS} />
+<Drawer.Screen name="Design" component={Design} />
+
+*/

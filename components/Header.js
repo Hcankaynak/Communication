@@ -23,7 +23,6 @@ export default function Header(props) {
         </View>
         <View style={styles.viewHeader}>
           <Text style={styles.textHeader}> {props.name} </Text>
-          <Text style={styles.textHeaderSub}>Havva Bayır</Text>
         </View>
       </View>
     </View>
