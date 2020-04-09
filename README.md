@@ -8,16 +8,7 @@ Bu bir iletişim uygulamasıdır. Engelli kişi ile buttonlar aracılığıyla b
 - Yazıları ekledikten sonra ana sayfaya dönüp dilediğiniz tuşa basabilirsiniz.
 - Tuşun rengi ve duyduğunuz cümle ayarlar menüsünde tuşa özel atadığınız değerlerdir.
 
-```
 ## TODO
 
 - Geri bildirim.
-- Nasıl yüklenir.
-
-
-## License
-
-TODO: find which license should I use?
-\
-[MIT](https://choosealicense.com/licenses/mit/)
-```
+- Nasıl yüklenir?
