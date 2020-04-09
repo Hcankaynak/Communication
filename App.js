@@ -5,9 +5,9 @@ import {NavigationContainer} from '@react-navigation/native';
 import HomePage from './components/HomePage';
 import Settings from './components/Settings';
 import FeedBack from './components/FeedBack';
-import Test from './components/Test';
-import TTS from './components/TTSTest';
-import Design from './components/Design';
+//import Test from './components/Test';
+//import TTS from './components/TTSTest';
+//import Design from './components/Design';
 
 const Drawer = createDrawerNavigator();
 
