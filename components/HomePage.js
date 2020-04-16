@@ -91,6 +91,11 @@ export default class HomePage extends Component {
           that.setState({
             dataSource: items,
           });
+        } else {
+          items[prop].color = item;
+          that.setState({
+            dataSource: items,
+          });
         }
       });
     }
