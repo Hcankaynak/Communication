@@ -30,7 +30,7 @@
     "react-navigation": "^4.2.2",
     "lodash": ">=4.17.19",
     "logkitty": ">=0.7.1",
-    "minimist": ">=1.2.3",
+    "minimist": ">=1.2.6",
     "mem": ">=4.0.0"
   },
   "devDependencies": {
